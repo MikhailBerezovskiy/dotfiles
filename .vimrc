@@ -17,8 +17,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/indentpython.vim'
 Bundle 'Valloric/YouCompleteMe'
-Plugin 'vim-syntastic/syntastic'
-Plugin 'nvie/vim-flake8'
+Plugin 'w0rp/ale'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'scrooloose/nerdcommenter'
@@ -34,7 +33,7 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'haya14busa/incsearch.vim'
 Plugin 'haya14busa/incsearch-fuzzy.vim'
 Plugin 'aserebryakov/vim-todo-lists'
-Plugin 'jnurmine/Zenburn'
+Plugin 'arcticicestudio/nord-vim'
 " ...
 
 " All of your Plugins must be added before the following line
@@ -42,9 +41,14 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 "colorscheme zenburn
-let g:solarized_termcolors=256
-set background=light
-colorscheme solarized
+"let g:solarized_termcolors=256
+"set background=light
+"colorscheme solarized
+
+set background=dark
+colorscheme nord
+let g:nord_italic_comments = 1
+let g:nord_comment_brightness = 18
 
 
 " scroll offset
@@ -102,6 +106,9 @@ au BufNewFile,BufRead *.py
       \ nnoremap <buffer> <F9> :exec '!python3' shellescape(@%,1)<cr> |
       \ TagbarOpen
 
+autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
+autocmd FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
+
 au BufNewFile,BufRead *.js,*.html,*.css
       \ set tabstop=2 |
       \ set softtabstop=2 |
@@ -146,39 +153,12 @@ let g:ycm_python_binary_path = '/usr/bin/python3'
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
-
-" ---------------------------------- "
-" Configure Syntastic
-" ---------------------------------- "
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-"let g:syntastic_python_python_exec = '/usr/bin/python3'
-"let g:syntastic_python_pyflakes_exe = 'python3 -m pyflakes'
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-let g:syntastic_aggregate_errors = 1
-
-let g:javascript_plugin_jsdoc = 1
-let g:javascript_plugin_flow = 1
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exe = 'npm run lint --'
-
 " ---------------------------------- "
 " Configure Easymotion
 " ---------------------------------- "
 map /  <Plug>(incsearch-forward)
 map ?  <Plug>(incsearch-backward)
 map g/ <Plug>(incsearch-stay)
-
-hi EasyMotionTarget ctermbg=none ctermfg=darkgreen
-hi EasyMotionShade  ctermbg=none ctermfg=lightgrey
-
-hi EasyMotionTarget2First ctermbg=none ctermfg=darkblue
-hi EasyMotionTarget2Second ctermbg=none ctermfg=blue
 
 
 " ---------------------------------- "
@@ -195,6 +175,15 @@ let g:ctrlp_custom_ignore = {
   \ }
 
 
+" ---------------------------------- "
+" Configure ALE
+" ---------------------------------- "
+let g:ale_open_list = 1
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_text_changed = 0
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_save = 1
+
 
 " ---------------------------------- "
 " Configure NERDTree
@@ -202,7 +191,7 @@ let g:ctrlp_custom_ignore = {
 " Window Width
 let g:NERDTreeWinSize=40
 " Hide .pyc in NerdTree
-let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__']
+let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__', 'venv']
 
 " Toggle NERDTree
 nmap <F6> :NERDTreeToggle<CR>
