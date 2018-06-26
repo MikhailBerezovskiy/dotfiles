@@ -45,15 +45,20 @@ filetype plugin indent on    " required
 "set background=light
 "colorscheme solarized
 
+set termguicolors
 set background=dark
-colorscheme nord
 let g:nord_italic_comments = 1
-let g:nord_comment_brightness = 18
+let g:nord_comment_brightness = 15
+colorscheme nord
 
 
 " scroll offset
-set scrolloff=15
-
+"set scrolloff=15
+augroup VCenterCursor
+  au!
+  au BufEnter,WinEnter,WinNew,VimResized *,*.*
+        \ let &scrolloff=winheight(win_getid())/2
+augroup END
 
 
 "---------------------------------
@@ -189,7 +194,7 @@ let g:ale_lint_on_save = 1
 " Configure NERDTree
 " ---------------------------------- "
 " Window Width
-let g:NERDTreeWinSize=40
+"let g:NERDTreeWinSize=40
 " Hide .pyc in NerdTree
 let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__', 'venv']
 
@@ -202,6 +207,6 @@ nmap <F8> :TagbarToggle<CR>
 " Lines numbers
 set nu
 
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd p
-autocmd BufWritePre * %s/\s\+$//e
+"autocmd VimEnter * NERDTree
+"autocmd VimEnter * wincmd p
+"autocmd BufWritePre * %s/\s\+$//e
