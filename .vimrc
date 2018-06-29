@@ -34,6 +34,7 @@ Plugin 'haya14busa/incsearch.vim'
 Plugin 'haya14busa/incsearch-fuzzy.vim'
 Plugin 'aserebryakov/vim-todo-lists'
 Plugin 'arcticicestudio/nord-vim'
+Plugin 'junegunn/goyo.vim'
 " ...
 
 " All of your Plugins must be added before the following line
@@ -53,12 +54,10 @@ colorscheme nord
 
 
 " scroll offset
-"set scrolloff=15
-augroup VCenterCursor
-  au!
-  au BufEnter,WinEnter,WinNew,VimResized *,*.*
-        \ let &scrolloff=winheight(win_getid())/2
-augroup END
+set scrolloff=20
+
+" Toggle Disgraction free (Goyo)
+nnoremap <Leader>W :Goyo<CR>
 
 
 "---------------------------------
@@ -109,7 +108,6 @@ au BufNewFile,BufRead *.py
       \ set autoindent |
       \ set fileformat=unix |
       \ nnoremap <buffer> <F9> :exec '!python3' shellescape(@%,1)<cr> |
-      \ TagbarOpen
 
 autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
 autocmd FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
@@ -172,7 +170,7 @@ map g/ <Plug>(incsearch-stay)
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 "" the nearest ancestor or files : .git .hg etc
 let g:ctrlp_working_path_mode = 'ra'
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/venv/*
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/]\.(git|hg|svn)$',
   \ 'file': '\v\.(exe|so|dll)$',
@@ -183,11 +181,8 @@ let g:ctrlp_custom_ignore = {
 " ---------------------------------- "
 " Configure ALE
 " ---------------------------------- "
-let g:ale_open_list = 1
+"let g:ale_open_list = 1
 let g:ale_fix_on_save = 1
-let g:ale_lint_on_text_changed = 0
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_save = 1
 
 
 " ---------------------------------- "
@@ -209,4 +204,6 @@ set nu
 
 "autocmd VimEnter * NERDTree
 "autocmd VimEnter * wincmd p
-"autocmd BufWritePre * %s/\s\+$//e
+"
+" Remove trailing whitespaces
+autocmd BufWritePre * %s/\s\+$//e
