@@ -17,6 +17,7 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/indentpython.vim'
 Bundle 'Valloric/YouCompleteMe'
+Plugin 'kien/ctrlp.vim'
 Plugin 'w0rp/ale'
 Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -32,9 +33,9 @@ Plugin 'honza/vim-snippets'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'haya14busa/incsearch.vim'
 Plugin 'haya14busa/incsearch-fuzzy.vim'
-Plugin 'aserebryakov/vim-todo-lists'
 Plugin 'arcticicestudio/nord-vim'
 Plugin 'junegunn/goyo.vim'
+Plugin 'fatih/vim-go'
 " ...
 
 " All of your Plugins must be added before the following line
@@ -83,6 +84,12 @@ augroup END
 " Search under cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
+
+" Jump between errors
+map <C-n> :cnext<CR>
+map <C-m> :cprevious<CR>
+nnoremap <leader>a :cclose<CR>
+
 " Enable folding
 set foldmethod=indent
 set foldlevel=99
@@ -119,6 +126,9 @@ au BufNewFile,BufRead *.js,*.html,*.css
       \ set expandtab |
       \ set autoindent |
 
+" Golang run and build
+autocmd FileType go nmap <leader>b  <Plug>(go-build)
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
 
 " highlight BadWhitespace
 highlight BadWhitespace ctermbg=blue guibg=darkred
@@ -138,11 +148,6 @@ let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
-let g:ycm_collect_identifiers_from_tags_files = 1 " Let YCM read tags from Ctags file
-let g:ycm_use_ultisnips_completer = 1 " Default 1, just ensure
-let g:ycm_seed_identifiers_with_syntax = 1 " Completion for programming language's keyword
-let g:ycm_complete_in_comments = 1 " Completion in comments
-let g:ycm_complete_in_strings = 1 " Completion in string
 
 let g:ycm_key_list_select_completion = ['<C-J>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-K>', '<Up>']
@@ -151,8 +156,6 @@ let g:ycm_key_list_previous_completion = ['<C-K>', '<Up>']
 map <F3> :YcmCompleter GoTo<CR>
 
 let g:ycm_autoclose_preview_window_after_completion=1
-let g:ycm_server_python_interpreter = '/usr/bin/python3'
-let g:ycm_python_binary_path = '/usr/bin/python3'
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
