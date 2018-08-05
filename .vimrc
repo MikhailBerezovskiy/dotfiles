@@ -1,4 +1,5 @@
 " setup Vundle
+set autowrite
 set nocompatible              " required
 filetype off                  " required
 
@@ -14,13 +15,11 @@ Plugin 'gmarik/Vundle.vim'
 
 " add all your plugins here (note older versions of Vundle
 " used Bundle instead of Plugin)
-Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/indentpython.vim'
 Bundle 'Valloric/YouCompleteMe'
 Plugin 'kien/ctrlp.vim'
 Plugin 'w0rp/ale'
 Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'airblade/vim-gitgutter'
@@ -53,6 +52,8 @@ let g:nord_italic_comments = 1
 let g:nord_comment_brightness = 15
 colorscheme nord
 
+" new leader
+let mapleader = ","
 
 " scroll offset
 set scrolloff=20
@@ -74,7 +75,6 @@ nnoremap <C-H> <C-W><C-H>
 
 
 " CursorLine highlight
-nnoremap <Leader>c :set cursorline! cursorcolumn!<CR>
 augroup CursorLine
   au!
   au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
@@ -83,7 +83,6 @@ augroup END
 
 " Search under cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
-
 
 " Jump between errors
 map <C-n> :cnext<CR>
@@ -97,8 +96,6 @@ set foldlevel=99
 " Enable folding with the spacebar
 nnoremap <space> za
 
-" See Dockstring in folded preview
-let g:SimpylFold_docstring_preview=1
 
 " common tabs
 set tabstop=2
@@ -106,6 +103,10 @@ set softtabstop=2
 set shiftwidth=2
 set expandtab
 
+
+
+
+" Python
 au BufNewFile,BufRead *.py
       \ set tabstop=4 |
       \ set softtabstop=4 |
@@ -115,10 +116,16 @@ au BufNewFile,BufRead *.py
       \ set autoindent |
       \ set fileformat=unix |
       \ nnoremap <buffer> <F9> :exec '!python3' shellescape(@%,1)<cr> |
+      \ let python_highlight_all=1 |
+      \ set encoding=utf-8
 
 autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
 autocmd FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
 
+
+
+
+" js, javascript, html, css
 au BufNewFile,BufRead *.js,*.html,*.css
       \ set tabstop=2 |
       \ set softtabstop=2 |
@@ -126,19 +133,37 @@ au BufNewFile,BufRead *.js,*.html,*.css
       \ set expandtab |
       \ set autoindent |
 
-" Golang run and build
-autocmd FileType go nmap <leader>b  <Plug>(go-build)
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
+
+
+
+" golang, go
+" navigate between errors
+" run :GoBuild or :GoTestCompile based on the go file
+function! s:build_go_files()
+    let l:file = expand('%')
+    if l:file =~# '^\f\+_test\.go$'
+        call go#test#Test(0, 1)
+    elseif l:file =~# '^\f\+\.go$'
+        call go#cmd#Build(0)
+    endif
+endfunction
+
+autocmd FileType go
+      \ set tabstop=4 |
+      \ set softtabstop=4 |
+      \ set shiftwidth=4 |
+      \ nmap <leader>b :<C-u>call <SID>build_go_files()<CR> |
+      \ nmap <leader>r  <Plug>(go-run) |
+      \ nmap <leader>t  <Plug>(go-test)
+
+let g:go_list_type = "quickfix"
+let g:go_fmt_command = "goimports"
+
+
 
 " highlight BadWhitespace
 highlight BadWhitespace ctermbg=blue guibg=darkred
 au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
-
-" Setup Unicode for Python3
-set encoding=utf-8
-
-" Python code hightligh
-let python_highlight_all=1
 
 
 " ---------------------------------- "
@@ -155,7 +180,7 @@ let g:ycm_key_list_previous_completion = ['<C-K>', '<Up>']
 " Goto definition with F3
 map <F3> :YcmCompleter GoTo<CR>
 
-let g:ycm_autoclose_preview_window_after_completion=1
+let g:ycm_autoclose_preview_window_after_completion=0
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
@@ -205,8 +230,8 @@ nmap <F8> :TagbarToggle<CR>
 " Lines numbers
 set nu
 
-"autocmd VimEnter * NERDTree
-"autocmd VimEnter * wincmd p
+autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd p
 "
 " Remove trailing whitespaces
 autocmd BufWritePre * %s/\s\+$//e
