@@ -151,10 +151,15 @@ endfunction
 autocmd FileType go
       \ set tabstop=4 |
       \ set softtabstop=4 |
-      \ set shiftwidth=4 |
-      \ nmap <leader>b :<C-u>call <SID>build_go_files()<CR> |
-      \ nmap <leader>r  <Plug>(go-run) |
-      \ nmap <leader>t  <Plug>(go-test)
+      \ set shiftwidth=4
+
+autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+autocmd FileType go nmap <leader>t  <Plug>(go-test)
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+let g:go_auto_sameids = 1
+let g:go_auto_type_info = 1
+set updatetime=100
 
 let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
@@ -230,7 +235,7 @@ nmap <F8> :TagbarToggle<CR>
 " Lines numbers
 set nu
 
-autocmd VimEnter * NERDTree
+"autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
 "
 " Remove trailing whitespaces
