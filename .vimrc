@@ -35,25 +35,25 @@ Plugin 'haya14busa/incsearch-fuzzy.vim'
 Plugin 'arcticicestudio/nord-vim'
 Plugin 'junegunn/goyo.vim'
 Plugin 'fatih/vim-go'
+Plugin 'jnurmine/zenburn'
 " ...
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-"colorscheme zenburn
-"let g:solarized_termcolors=256
-"set background=light
-"colorscheme solarized
-
 set termguicolors
 set background=dark
 let g:nord_italic_comments = 1
 let g:nord_comment_brightness = 15
+let g:nord_cursor_line_number_background = 1
 colorscheme nord
+
+"colorscheme zenburn
 
 " new leader
 let mapleader = ","
+
 
 " scroll offset
 set scrolloff=20
@@ -72,14 +72,6 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-
-
-" CursorLine highlight
-augroup CursorLine
-  au!
-  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  au WinLeave * setlocal nocursorline
-augroup END
 
 " Search under cursor
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
@@ -115,13 +107,12 @@ au BufNewFile,BufRead *.py
       \ set expandtab |
       \ set autoindent |
       \ set fileformat=unix |
-      \ nnoremap <buffer> <F9> :exec '!python3' shellescape(@%,1)<cr> |
-      \ let python_highlight_all=1 |
       \ set encoding=utf-8
 
 autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
 autocmd FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
-
+autocmd FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(@%,1)<cr>
+let python_highlight_all=1
 
 
 
@@ -131,7 +122,7 @@ au BufNewFile,BufRead *.js,*.html,*.css
       \ set softtabstop=2 |
       \ set shiftwidth=2 |
       \ set expandtab |
-      \ set autoindent |
+      \ set autoindent
 
 
 
@@ -148,18 +139,32 @@ function! s:build_go_files()
     endif
 endfunction
 
-autocmd FileType go
-      \ set tabstop=4 |
-      \ set softtabstop=4 |
-      \ set shiftwidth=4
+autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 
+" mappings
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
 autocmd FileType go nmap <Leader>i <Plug>(go-info)
+autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+
+" Info in status bar
 let g:go_auto_sameids = 1
 let g:go_auto_type_info = 1
 set updatetime=100
+
+" Highlights
+"let g:go_highlight_types = 1
+"let g:go_highlight_fields = 1
+"let g:go_highlight_functions = 1
+"let g:go_highlight_function_calls = 1
+"let g:go_highlight_operators = 1
+
+" Splits
+autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 
 let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
@@ -174,6 +179,7 @@ au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
 " ---------------------------------- "
 " Configure YouCompleteMe
 " ---------------------------------- "
+set completeopt-=preview
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
@@ -185,8 +191,8 @@ let g:ycm_key_list_previous_completion = ['<C-K>', '<Up>']
 " Goto definition with F3
 map <F3> :YcmCompleter GoTo<CR>
 
-let g:ycm_autoclose_preview_window_after_completion=0
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+let g:ycm_autoclose_preview_window_after_completion=1
+"map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
 " ---------------------------------- "
@@ -215,7 +221,7 @@ let g:ctrlp_custom_ignore = {
 " Configure ALE
 " ---------------------------------- "
 "let g:ale_open_list = 1
-let g:ale_fix_on_save = 1
+"let g:ale_fix_on_save = 1
 
 
 " ---------------------------------- "
@@ -233,7 +239,7 @@ nmap <F6> :NERDTreeToggle<CR>
 nmap <F8> :TagbarToggle<CR>
 
 " Lines numbers
-set nu
+"set nu
 
 "autocmd VimEnter * NERDTree
 autocmd VimEnter * wincmd p
