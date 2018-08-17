@@ -1,13 +1,28 @@
+"""
+Setup my dot files
+#TODO: add dirscan for dotfiles and create symlinks in home dir
+"""
 import os
+import logging
 
-home_dir = os.environ["HOME"]
-src = home_dir + "/dotfiles"
-dst = home_dir
+HOME_DIR = os.environ['HOME']
+SRC = HOME_DIR + '/dotfiles'
+DST = HOME_DIR
 
+logger = logging.getLogger('dotfiles')
+logger.setLevel(logging.DEBUG)
 
 def main():
-   os.symlink(src+"/.bashrc", dst+"/.bashrc")
-   os.symlink(src+"/.vimrc", dst + "/.vimrc")
+    try:
+        os.symlink(SRC+'/.bashrc', DST+'/.bashrc')
+        os.symlink(SRC+'/.vimrc', DST + '/.vimrc')
+    except OSError as err:
+        logger.warn(err)
+        pass
+
 
 if __name__ == "__main__":
-    main()
+    # main()
+    d = os.scandir(SRC)
+    print(d)
+    print(list(d))

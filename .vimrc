@@ -42,14 +42,20 @@ Plugin 'jnurmine/zenburn'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-set termguicolors
-set background=dark
-let g:nord_italic_comments = 1
-let g:nord_comment_brightness = 15
-let g:nord_cursor_line_number_background = 1
-colorscheme nord
+"set termguicolors
+"set background=dark
+"let g:nord_italic_comments = 1
+"let g:nord_comment_brightness = 15
+"let g:nord_cursor_line_number_background = 1
+"colorscheme nord
 
-"colorscheme zenburn
+colorscheme zenburn
+
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave * setlocal nocursorline
+augroup END
 
 " new leader
 let mapleader = ","
@@ -154,11 +160,11 @@ let g:go_auto_type_info = 1
 set updatetime=100
 
 " Highlights
-"let g:go_highlight_types = 1
-"let g:go_highlight_fields = 1
-"let g:go_highlight_functions = 1
-"let g:go_highlight_function_calls = 1
-"let g:go_highlight_operators = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
 
 " Splits
 autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
@@ -192,7 +198,7 @@ let g:ycm_key_list_previous_completion = ['<C-K>', '<Up>']
 map <F3> :YcmCompleter GoTo<CR>
 
 let g:ycm_autoclose_preview_window_after_completion=1
-"map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
 
 " ---------------------------------- "
