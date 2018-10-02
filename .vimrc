@@ -15,15 +15,16 @@ Plugin 'gmarik/Vundle.vim'
 
 " add all your plugins here (note older versions of Vundle
 " used Bundle instead of Plugin)
-Plugin 'vim-scripts/indentpython.vim'
 Bundle 'Valloric/YouCompleteMe'
 Plugin 'kien/ctrlp.vim'
 Plugin 'w0rp/ale'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'tpope/vim-fugitive'
+Plugin 'vim-scripts/indentpython.vim'
 Plugin 'airblade/vim-gitgutter'
-Plugin 'bling/vim-airline'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'majutsushi/tagbar'
 Plugin 'pangloss/vim-javascript'
 Plugin 'tpope/vim-surround'
@@ -35,7 +36,7 @@ Plugin 'haya14busa/incsearch-fuzzy.vim'
 Plugin 'arcticicestudio/nord-vim'
 Plugin 'junegunn/goyo.vim'
 Plugin 'fatih/vim-go'
-Plugin 'jnurmine/zenburn'
+Plugin 'zenburn'
 " ...
 
 " All of your Plugins must be added before the following line
@@ -44,12 +45,22 @@ filetype plugin indent on    " required
 
 set termguicolors
 set background=dark
+"colorscheme zenburn
 let g:nord_italic_comments = 1
-let g:nord_comment_brightness = 15
+let g:nord_uniform_status_lines = 1
+let g:nord_comment_brightness = 18
 let g:nord_cursor_line_number_background = 1
 colorscheme nord
 
-"colorscheme zenburn
+"colorscheme typewriter
+"set background=light
+"colorscheme solarized
+
+set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
+set guioptions-=m  "remove menu bar
+set guioptions-=T  "remove toolbar
+"set guioptions-=r  "remove right-hand scroll bar
+"set guioptions-=L  "remove left-hand scroll bar
 
 augroup CursorLine
   au!
@@ -60,9 +71,8 @@ augroup END
 " new leader
 let mapleader = ","
 
-
 " scroll offset
-set scrolloff=20
+set scrolloff=15
 
 " Toggle Disgraction free (Goyo)
 nnoremap <Leader>W :Goyo<CR>
@@ -162,7 +172,7 @@ set updatetime=100
 " Highlights
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 0
-let g:go_highlight_functions = 0
+let g:go_highlight_functions = 1
 let g:go_highlight_function_calls = 0
 let g:go_highlight_operators = 0
 
@@ -204,10 +214,17 @@ map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 " ---------------------------------- "
 " Configure Easymotion
 " ---------------------------------- "
-map /  <Plug>(incsearch-forward)
-map ?  <Plug>(incsearch-backward)
-map g/ <Plug>(incsearch-stay)
-
+" <Leader>f{char} to move to {char}
+map  <Leader><Leader>f <Plug>(easymotion-bd-f)
+nmap <Leader><Leader>f <Plug>(easymotion-overwin-f)
+" s{char}{char} to move to {char}{char}
+nmap s <Plug>(easymotion-overwin-f2)
+" Move to line
+map <Leader><Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader><Leader>L <Plug>(easymotion-overwin-line)
+" Move to word
+map  <Leader><Leader>w <Plug>(easymotion-bd-w)
+nmap <Leader><Leader>w <Plug>(easymotion-overwin-w)
 
 " ---------------------------------- "
 " Configure CTRLP
