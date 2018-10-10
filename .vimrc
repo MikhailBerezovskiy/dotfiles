@@ -37,6 +37,8 @@ Plugin 'arcticicestudio/nord-vim'
 Plugin 'junegunn/goyo.vim'
 Plugin 'fatih/vim-go'
 Plugin 'zenburn'
+Plugin 'google/yapf', { 'rtp': 'plugins/vim' }
+Plugin 'chrisbra/csv.vim'
 " ...
 
 " All of your Plugins must be added before the following line
@@ -45,15 +47,14 @@ filetype plugin indent on    " required
 
 set termguicolors
 set background=dark
-"colorscheme zenburn
 let g:nord_italic_comments = 1
 let g:nord_uniform_status_lines = 1
 let g:nord_comment_brightness = 18
 let g:nord_cursor_line_number_background = 1
 colorscheme nord
 
-"colorscheme typewriter
 "set background=light
+"colorscheme typewriter
 "colorscheme solarized
 
 set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
@@ -62,11 +63,11 @@ set guioptions-=T  "remove toolbar
 "set guioptions-=r  "remove right-hand scroll bar
 "set guioptions-=L  "remove left-hand scroll bar
 
-augroup CursorLine
-  au!
-  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  au WinLeave * setlocal nocursorline
-augroup END
+"augroup CursorLine
+  "au!
+  "au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  "au WinLeave * setlocal nocursorline
+"augroup END
 
 " new leader
 let mapleader = ","
@@ -114,7 +115,9 @@ set expandtab
 
 
 
-" Python
+" ---------------------------------- "
+" Configure python
+" ---------------------------------- "
 au BufNewFile,BufRead *.py
       \ set tabstop=4 |
       \ set softtabstop=4 |
@@ -125,13 +128,18 @@ au BufNewFile,BufRead *.py
       \ set fileformat=unix |
       \ set encoding=utf-8
 
+" Configure YAPF, google python formater
 autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
+
 autocmd FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
 autocmd FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(@%,1)<cr>
 let python_highlight_all=1
 
 
 
+" ---------------------------------- "
+" Configure javascript, js
+" ---------------------------------- "
 " js, javascript, html, css
 au BufNewFile,BufRead *.js,*.html,*.css
       \ set tabstop=2 |
@@ -142,8 +150,10 @@ au BufNewFile,BufRead *.js,*.html,*.css
 
 
 
+" ---------------------------------- "
+" Configure go, golang
+" ---------------------------------- "
 
-" golang, go
 " navigate between errors
 " run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
@@ -161,20 +171,21 @@ autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
-autocmd FileType go nmap <Leader>i <Plug>(go-info)
-autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+autocmd FileType go nmap <Leader>i  <Plug>(go-info)
+autocmd FileType go nmap <Leader>c  <Plug>(go-coverage-toggle)
+
 
 " Info in status bar
-let g:go_auto_sameids = 1
-let g:go_auto_type_info = 1
-set updatetime=100
+"let g:go_auto_sameids = 1
+"let g:go_auto_type_info = 1
+"set updatetime=100
 
 " Highlights
 let g:go_highlight_types = 1
-let g:go_highlight_fields = 0
+let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 0
-let g:go_highlight_operators = 0
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
 
 " Splits
 autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
@@ -182,6 +193,7 @@ autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit'
 autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
 autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 
+let g:go_metalinter_autosave = 1
 let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
 
@@ -240,11 +252,23 @@ let g:ctrlp_custom_ignore = {
   \ }
 
 
+
+
 " ---------------------------------- "
 " Configure ALE
 " ---------------------------------- "
-"let g:ale_open_list = 1
-"let g:ale_fix_on_save = 1
+let g:ale_open_list = 1
+let g:ale_fix_on_save = 1
+let g:ale_echo_cursor = 0
+
+" Set this. Airline will handle the rest.
+let g:airline#extensions#ale#enabled = 1
+
+" Write this in your vimrc file
+let g:ale_lint_on_text_changed = 'never'
+" You can disable this option too
+" if you don't want linters to run on opening a file
+let g:ale_lint_on_enter = 0
 
 
 " ---------------------------------- "
