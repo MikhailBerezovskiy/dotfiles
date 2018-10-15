@@ -39,6 +39,7 @@ Plugin 'fatih/vim-go'
 Plugin 'zenburn'
 Plugin 'google/yapf', { 'rtp': 'plugins/vim' }
 Plugin 'chrisbra/csv.vim'
+Plugin 'christoomey/vim-tmux-navigator'
 " ...
 
 " All of your Plugins must be added before the following line
@@ -47,11 +48,12 @@ filetype plugin indent on    " required
 
 set termguicolors
 set background=dark
-let g:nord_italic_comments = 1
-let g:nord_uniform_status_lines = 1
-let g:nord_comment_brightness = 18
-let g:nord_cursor_line_number_background = 1
-colorscheme nord
+colorscheme zenburn
+"let g:nord_italic_comments = 1
+"let g:nord_uniform_status_lines = 1
+"let g:nord_comment_brightness = 18
+"let g:nord_cursor_line_number_background = 1
+"colorscheme nord
 
 "set background=light
 "colorscheme typewriter
@@ -63,11 +65,11 @@ set guioptions-=T  "remove toolbar
 "set guioptions-=r  "remove right-hand scroll bar
 "set guioptions-=L  "remove left-hand scroll bar
 
-"augroup CursorLine
-  "au!
-  "au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  "au WinLeave * setlocal nocursorline
-"augroup END
+augroup CursorLine
+  au!
+  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  au WinLeave * setlocal nocursorline
+augroup END
 
 " new leader
 let mapleader = ","
@@ -132,7 +134,7 @@ au BufNewFile,BufRead *.py
 autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
 
 autocmd FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
-autocmd FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(@%,1)<cr>
+autocmd FileType python nnoremap <buffer> <F9> :exec '!python' shellescape(@%,1)<cr>
 let python_highlight_all=1
 
 
@@ -176,9 +178,9 @@ autocmd FileType go nmap <Leader>c  <Plug>(go-coverage-toggle)
 
 
 " Info in status bar
-"let g:go_auto_sameids = 1
-"let g:go_auto_type_info = 1
-"set updatetime=100
+let g:go_auto_sameids = 1
+let g:go_auto_type_info = 1
+set updatetime=100
 
 " Highlights
 let g:go_highlight_types = 1
@@ -269,6 +271,11 @@ let g:ale_lint_on_text_changed = 'never'
 " You can disable this option too
 " if you don't want linters to run on opening a file
 let g:ale_lint_on_enter = 0
+" python checkers
+let g:ale_python_flake8_executable = 'python'
+let g:ale_python_flake8_options = '-m flake8'
+let g:ale_python_pylint_executable = 'python'
+let g:ale_python_pylint_options = '-m pylint'
 
 
 " ---------------------------------- "
