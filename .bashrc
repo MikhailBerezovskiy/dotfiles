@@ -125,5 +125,7 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH=$PATH:/usr/local/go/bin
-export GOPATH=$HOME/go
+if [[ $PATH != *"go/bin"* ]]; then
+  GOPATH=$HOME/code/go
+  PATH=$PATH:/usr/local/go/bin
+fi

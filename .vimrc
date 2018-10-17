@@ -15,61 +15,56 @@ Plugin 'gmarik/Vundle.vim'
 
 " add all your plugins here (note older versions of Vundle
 " used Bundle instead of Plugin)
-Bundle 'Valloric/YouCompleteMe'
-Plugin 'kien/ctrlp.vim'
+
+" Common plugins
+Bundle 'valloric/youcompleteme'
 Plugin 'w0rp/ale'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'tpope/vim-fugitive'
-Plugin 'vim-scripts/indentpython.vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
+
+" Navigation
+Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/nerdtree'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'tpope/vim-fugitive'
 Plugin 'majutsushi/tagbar'
-Plugin 'pangloss/vim-javascript'
-Plugin 'tpope/vim-surround'
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-Plugin 'easymotion/vim-easymotion'
 Plugin 'haya14busa/incsearch.vim'
 Plugin 'haya14busa/incsearch-fuzzy.vim'
-Plugin 'arcticicestudio/nord-vim'
+Plugin 'easymotion/vim-easymotion'
+Plugin 'christoomey/vim-tmux-navigator'
+
+" Editing
+Plugin 'tpope/vim-surround'
+Plugin 'vim-scripts/indentpython.vim'
+Plugin 'SirVer/ultisnips'
+Plugin 'honza/vim-snippets'
+
+" Languages
+Plugin 'pangloss/vim-javascript'
 Plugin 'junegunn/goyo.vim'
 Plugin 'fatih/vim-go'
-Plugin 'zenburn'
-Plugin 'google/yapf', { 'rtp': 'plugins/vim' }
 Plugin 'chrisbra/csv.vim'
-Plugin 'christoomey/vim-tmux-navigator'
+
+" Colors
+Plugin 'rafi/awesome-vim-colorschemes'
+
 " ...
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 
+" Colors
 set termguicolors
-set background=dark
-colorscheme zenburn
-"let g:nord_italic_comments = 1
-"let g:nord_uniform_status_lines = 1
-"let g:nord_comment_brightness = 18
-"let g:nord_cursor_line_number_background = 1
-"colorscheme nord
+colo deus
 
-"set background=light
-"colorscheme typewriter
-"colorscheme solarized
 
-set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
-set guioptions-=m  "remove menu bar
-set guioptions-=T  "remove toolbar
-"set guioptions-=r  "remove right-hand scroll bar
-"set guioptions-=L  "remove left-hand scroll bar
-
-augroup CursorLine
-  au!
-  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  au WinLeave * setlocal nocursorline
-augroup END
+"augroup CursorLine
+  "au!
+  "au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+  "au WinLeave * setlocal nocursorline
+"augroup END
 
 " new leader
 let mapleader = ","
@@ -107,13 +102,11 @@ set foldlevel=99
 " Enable folding with the spacebar
 nnoremap <space> za
 
-
 " common tabs
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
 set expandtab
-
 
 
 
@@ -184,10 +177,10 @@ set updatetime=100
 
 " Highlights
 let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
+let g:go_highlight_fields = 0
 let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
+let g:go_highlight_function_calls = 0
+let g:go_highlight_operators = 0
 
 " Splits
 autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
