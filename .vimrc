@@ -44,6 +44,7 @@ Plugin 'honza/vim-snippets'
 Plugin 'pangloss/vim-javascript'
 Plugin 'junegunn/goyo.vim'
 Plugin 'fatih/vim-go'
+Plugin 'buoto/gotests-vim'
 Plugin 'chrisbra/csv.vim'
 
 " Colors
@@ -91,9 +92,9 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 " Jump between errors
-map <C-n> :cnext<CR>
-map <C-m> :cprevious<CR>
-nnoremap <leader>a :cclose<CR>
+map <C-n> :lnext<CR>
+map <C-m> :lprevious<CR>
+nnoremap <leader>a :lclose<CR>
 
 " Enable folding
 set foldmethod=indent
@@ -166,6 +167,7 @@ autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
+autocmd FileType go nmap <leader>tf  <Plug>(go-test-func)
 autocmd FileType go nmap <Leader>i  <Plug>(go-info)
 autocmd FileType go nmap <Leader>c  <Plug>(go-coverage-toggle)
 
@@ -191,7 +193,6 @@ autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 let g:go_metalinter_autosave = 1
 let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
-
 
 
 " highlight BadWhitespace

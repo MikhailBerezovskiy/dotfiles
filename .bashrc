@@ -125,7 +125,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Add golang to PATH
 if [[ $PATH != *"go/bin"* ]]; then
+  PATH=$PATH:/usr/local/go/bin:$HOME/code/go/bin
+fi
+
+# Add gopath
+if [[ $GOPATH != "$HOME/code/go" ]]; then
   GOPATH=$HOME/code/go
-  PATH=$PATH:/usr/local/go/bin
 fi
