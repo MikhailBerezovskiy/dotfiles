@@ -58,7 +58,9 @@ filetype plugin indent on    " required
 
 " Colors
 set termguicolors
-colo deus
+set bg=light
+colo lucius
+"colo deus
 
 
 "augroup CursorLine
@@ -92,9 +94,9 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 
 " Jump between errors
-map <C-n> :lnext<CR>
-map <C-m> :lprevious<CR>
-nnoremap <leader>a :lclose<CR>
+map <C-n> :cnext<CR>
+map <C-m> :cprevious<CR>
+nnoremap <leader>a :cclose<CR>
 
 " Enable folding
 set foldmethod=indent
@@ -253,6 +255,8 @@ let g:ctrlp_custom_ignore = {
 " ---------------------------------- "
 " Configure ALE
 " ---------------------------------- "
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
 let g:ale_open_list = 1
 let g:ale_fix_on_save = 1
 let g:ale_echo_cursor = 0
