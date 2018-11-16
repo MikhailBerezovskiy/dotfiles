@@ -42,13 +42,13 @@ Plugin 'honza/vim-snippets'
 
 " Languages
 Plugin 'pangloss/vim-javascript'
-Plugin 'junegunn/goyo.vim'
 Plugin 'fatih/vim-go'
 Plugin 'buoto/gotests-vim'
 Plugin 'chrisbra/csv.vim'
 
 " Colors
-Plugin 'rafi/awesome-vim-colorschemes'
+"Plugin 'jnurmine/Zenburn'
+Plugin 'andreypopp/vim-colors-plain'
 
 " ...
 
@@ -57,11 +57,7 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 " Colors
-set termguicolors
-set bg=light
-colo lucius
-"colo deus
-
+colo plain
 
 "augroup CursorLine
   "au!
@@ -74,10 +70,6 @@ let mapleader = ","
 
 " scroll offset
 set scrolloff=15
-
-" Toggle Disgraction free (Goyo)
-nnoremap <Leader>W :Goyo<CR>
-
 
 "---------------------------------
 "------Navigation and panes------
@@ -97,21 +89,16 @@ nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 map <C-n> :cnext<CR>
 map <C-m> :cprevious<CR>
 nnoremap <leader>a :cclose<CR>
+autocmd FileType qf wincmd J
 
 " Enable folding
-set foldmethod=indent
-set foldlevel=99
+"set foldmethod=indent
+"set foldlevel=99
 
-" Enable folding with the spacebar
-nnoremap <space> za
-
-" common tabs
-set tabstop=2
-set softtabstop=2
-set shiftwidth=2
-set expandtab
-
-
+" common indent
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
 
 " ---------------------------------- "
 " Configure python
@@ -128,11 +115,9 @@ au BufNewFile,BufRead *.py
 
 " Configure YAPF, google python formater
 autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
-
 autocmd FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
 autocmd FileType python nnoremap <buffer> <F9> :exec '!python' shellescape(@%,1)<cr>
 let python_highlight_all=1
-
 
 
 " ---------------------------------- "
@@ -140,18 +125,16 @@ let python_highlight_all=1
 " ---------------------------------- "
 " js, javascript, html, css
 au BufNewFile,BufRead *.js,*.html,*.css
-      \ set tabstop=2 |
-      \ set softtabstop=2 |
-      \ set shiftwidth=2 |
+      \ set tabstop=4 |
+      \ set softtabstop=4 |
+      \ set shiftwidth=4 |
       \ set expandtab |
       \ set autoindent
-
 
 
 " ---------------------------------- "
 " Configure go, golang
 " ---------------------------------- "
-
 " navigate between errors
 " run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
@@ -173,18 +156,12 @@ autocmd FileType go nmap <leader>tf  <Plug>(go-test-func)
 autocmd FileType go nmap <Leader>i  <Plug>(go-info)
 autocmd FileType go nmap <Leader>c  <Plug>(go-coverage-toggle)
 
-
-" Info in status bar
-let g:go_auto_sameids = 1
-let g:go_auto_type_info = 1
-set updatetime=100
-
 " Highlights
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 0
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 0
-let g:go_highlight_operators = 0
+"let g:go_highlight_types = 1
+"let g:go_highlight_fields = 1
+"let g:go_highlight_functions = 1
+"let g:go_highlight_function_calls = 1
+"let g:go_highlight_operators = 1
 
 " Splits
 autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
@@ -197,26 +174,17 @@ let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
 
 
-" highlight BadWhitespace
-highlight BadWhitespace ctermbg=blue guibg=darkred
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h match BadWhitespace /\s\+$/
-
-
 " ---------------------------------- "
-" Configure YouCompleteMe
+" Configure YouCompleteMe and Snippets
 " ---------------------------------- "
 set completeopt-=preview
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-
-
 let g:ycm_key_list_select_completion = ['<C-J>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-K>', '<Up>']
-
 " Goto definition with F3
 map <F3> :YcmCompleter GoTo<CR>
-
 let g:ycm_autoclose_preview_window_after_completion=1
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 
@@ -251,14 +219,13 @@ let g:ctrlp_custom_ignore = {
 
 
 
-
 " ---------------------------------- "
 " Configure ALE
 " ---------------------------------- "
-let g:ale_set_loclist = 0
+"let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
 let g:ale_open_list = 1
-let g:ale_fix_on_save = 1
+"let g:ale_fix_on_save = 0
 let g:ale_echo_cursor = 0
 
 " Set this. Airline will handle the rest.
@@ -268,7 +235,7 @@ let g:airline#extensions#ale#enabled = 1
 let g:ale_lint_on_text_changed = 'never'
 " You can disable this option too
 " if you don't want linters to run on opening a file
-let g:ale_lint_on_enter = 0
+let g:ale_lint_on_enter = 1
 " python checkers
 let g:ale_python_flake8_executable = 'python'
 let g:ale_python_flake8_options = '-m flake8'
@@ -294,7 +261,7 @@ nmap <F8> :TagbarToggle<CR>
 "set nu
 
 "autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd p
+"autocmd VimEnter * wincmd p
 "
 " Remove trailing whitespaces
-autocmd BufWritePre * %s/\s\+$//e
+"autocmd BufWritePre * %s/\s\+$//e
