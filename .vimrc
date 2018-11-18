@@ -48,7 +48,7 @@ Plugin 'chrisbra/csv.vim'
 
 " Colors
 "Plugin 'jnurmine/Zenburn'
-Plugin 'andreypopp/vim-colors-plain'
+Plugin 'mikhailberezovskiy/vim-colors-plain'
 
 " ...
 
