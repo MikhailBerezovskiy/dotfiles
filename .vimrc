@@ -18,6 +18,7 @@ Plugin 'gmarik/Vundle.vim'
 
 " Common plugins
 Bundle 'valloric/youcompleteme'
+Plugin 'rdnetto/YCM-Generator', { 'branch': 'stable'}
 Plugin 'w0rp/ale'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'vim-airline/vim-airline'
@@ -39,6 +40,9 @@ Plugin 'tpope/vim-surround'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
+Plugin 'google/vim-maktaba'
+Plugin 'google/vim-codefmt'
+Plugin 'google/vim-glaive'
 
 " Languages
 Plugin 'pangloss/vim-javascript'
@@ -47,17 +51,21 @@ Plugin 'buoto/gotests-vim'
 Plugin 'chrisbra/csv.vim'
 
 " Colors
-"Plugin 'jnurmine/Zenburn'
-Plugin 'mikhailberezovskiy/vim-colors-plain'
+Plugin 'logico-dev/typewriter'
+Plugin 'jnurmine/Zenburn'
 
 " ...
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
+
+call glaive#Install()
+
 filetype plugin indent on    " required
 
 " Colors
-colo plain
+colo zenburn
+"let g:airline_theme = 'typewriter'
 
 "augroup CursorLine
   "au!
@@ -89,7 +97,7 @@ nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 map <C-n> :cnext<CR>
 map <C-m> :cprevious<CR>
 nnoremap <leader>a :cclose<CR>
-autocmd FileType qf wincmd J
+"autocmd FileType qf wincmd J
 
 " Enable folding
 "set foldmethod=indent
@@ -173,10 +181,15 @@ let g:go_metalinter_autosave = 1
 let g:go_list_type = "quickfix"
 let g:go_fmt_command = "goimports"
 
+" ---------------------------------- "
+" Configure cpp c++
+" ---------------------------------- "
+autocmd FileType cpp nmap <leader>r :!g++ % && ./a.out<CR>
 
 " ---------------------------------- "
 " Configure YouCompleteMe and Snippets
 " ---------------------------------- "
+let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
 set completeopt-=preview
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
@@ -218,15 +231,35 @@ let g:ctrlp_custom_ignore = {
   \ }
 
 
+" ---------------------------------- "
+" Configure codefmt
+" ---------------------------------- "
+augroup autoformat_settings
+  autocmd FileType bzl AutoFormatBuffer buildifier
+  autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
+  autocmd FileType dart AutoFormatBuffer dartfmt
+  autocmd FileType go AutoFormatBuffer gofmt
+  autocmd FileType gn AutoFormatBuffer gn
+  autocmd FileType html,css,json AutoFormatBuffer js-beautify
+  autocmd FileType java AutoFormatBuffer google-java-format
+  autocmd FileType python AutoFormatBuffer yapf
+  " Alternative: autocmd FileType python AutoFormatBuffer autopep8
+augroup END
 
 " ---------------------------------- "
 " Configure ALE
 " ---------------------------------- "
-"let g:ale_set_loclist = 0
+let g:ale_completion_enabled = 0
+let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
 let g:ale_open_list = 1
 "let g:ale_fix_on_save = 0
 let g:ale_echo_cursor = 0
+
+aug QFClose
+  au!
+  au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix"|q|endif
+aug END
 
 " Set this. Airline will handle the rest.
 let g:airline#extensions#ale#enabled = 1
@@ -237,10 +270,10 @@ let g:ale_lint_on_text_changed = 'never'
 " if you don't want linters to run on opening a file
 let g:ale_lint_on_enter = 1
 " python checkers
-let g:ale_python_flake8_executable = 'python'
-let g:ale_python_flake8_options = '-m flake8'
-let g:ale_python_pylint_executable = 'python'
-let g:ale_python_pylint_options = '-m pylint'
+"let g:ale_python_flake8_executable = 'python'
+"let g:ale_python_flake8_options = '-m flake8'
+"let g:ale_python_pylint_executable = 'python'
+"let g:ale_python_pylint_options = '-m pylint'
 
 
 " ---------------------------------- "
