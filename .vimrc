@@ -68,9 +68,9 @@ colo zenburn
 "let g:airline_theme = 'typewriter'
 
 "augroup CursorLine
-  "au!
-  "au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  "au WinLeave * setlocal nocursorline
+"au!
+"au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+"au WinLeave * setlocal nocursorline
 "augroup END
 
 " new leader
@@ -78,6 +78,11 @@ let mapleader = ","
 
 " scroll offset
 set scrolloff=15
+
+augroup vimrc
+    autocmd!
+    autocmd BufWinEnter,Syntax * syn sync minlines=500 maxlines=500
+augroup END
 
 "---------------------------------
 "------Navigation and panes------
@@ -112,18 +117,15 @@ set shiftwidth=4
 " Configure python
 " ---------------------------------- "
 au BufNewFile,BufRead *.py
-      \ set tabstop=4 |
-      \ set softtabstop=4 |
-      \ set shiftwidth=4 |
-      \ set textwidth=79 |
-      \ set expandtab |
-      \ set autoindent |
-      \ set fileformat=unix |
-      \ set encoding=utf-8
+            \ set tabstop=4 |
+            \ set softtabstop=4 |
+            \ set shiftwidth=4 |
+            \ set textwidth=79 |
+            \ set expandtab |
+            \ set autoindent |
+            \ set fileformat=unix |
+            \ set encoding=utf-8
 
-" Configure YAPF, google python formater
-autocmd FileType python nnoremap <LocalLeader>= :0,$!yapf<CR>
-autocmd FileType python nnoremap <LocalLeader>i :!isort %<CR><CR>
 autocmd FileType python nnoremap <buffer> <F9> :exec '!python' shellescape(@%,1)<cr>
 let python_highlight_all=1
 
@@ -133,43 +135,18 @@ let python_highlight_all=1
 " ---------------------------------- "
 " js, javascript, html, css
 au BufNewFile,BufRead *.js,*.html,*.css
-      \ set tabstop=4 |
-      \ set softtabstop=4 |
-      \ set shiftwidth=4 |
-      \ set expandtab |
-      \ set autoindent
+            \ set tabstop=4 |
+            \ set softtabstop=4 |
+            \ set shiftwidth=4 |
+            \ set expandtab |
+            \ set autoindent
 
 
 " ---------------------------------- "
-" Configure go, golang
+" Configure go, golang, GO
 " ---------------------------------- "
 " navigate between errors
-" run :GoBuild or :GoTestCompile based on the go file
-function! s:build_go_files()
-    let l:file = expand('%')
-    if l:file =~# '^\f\+_test\.go$'
-        call go#test#Test(0, 1)
-    elseif l:file =~# '^\f\+\.go$'
-        call go#cmd#Build(0)
-    endif
-endfunction
-
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-
-" mappings
-autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-autocmd FileType go nmap <leader>t  <Plug>(go-test)
-autocmd FileType go nmap <leader>tf  <Plug>(go-test-func)
-autocmd FileType go nmap <Leader>i  <Plug>(go-info)
-autocmd FileType go nmap <Leader>c  <Plug>(go-coverage-toggle)
-
-" Highlights
-"let g:go_highlight_types = 1
-"let g:go_highlight_fields = 1
-"let g:go_highlight_functions = 1
-"let g:go_highlight_function_calls = 1
-"let g:go_highlight_operators = 1
 
 " Splits
 autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
@@ -177,14 +154,51 @@ autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit'
 autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
 autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 
-let g:go_metalinter_autosave = 1
-let g:go_list_type = "quickfix"
-let g:go_fmt_command = "goimports"
+function! VimGoSetup()
+    " vim-go related mappings
+    au FileType go nmap <Leader>r <Plug>(go-run)
+    au FileType go nmap <Leader>b <Plug>(go-build)
+    au FileType go nmap <Leader>t <Plug>(go-test)
+    au FileType go nmap <Leader>i <Plug>(go-info)
+    au FileType go nmap <Leader>s <Plug>(go-implements)
+    au FileType go nmap <Leader>c <Plug>(go-coverage)
+    au FileType go nmap <Leader>e <Plug>(go-rename)
+    au FileType go nmap <Leader>gi <Plug>(go-imports)
+    au FileType go nmap <Leader>gI <Plug>(go-install)
+    au FileType go nmap <Leader>gd <Plug>(go-doc)
+    au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+    au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
+    au FileType go nmap <Leader>ds <Plug>(go-def-split)
+    au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+    au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+    let g:go_auto_type_info = 1
+    let g:go_fmt_command = "gofmt"
+    let g:go_fmt_experimental = 1
+    let g:go_dispatch_enabled = 0 " vim-dispatch needed
+    let g:go_list_type = "quickfix"
+    let g:go_metalinter_autosave = 1
+    let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+    let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+    let g:go_term_enabled = 0
+    let g:go_term_mode = "vertical"
+    let g:go_highlight_functions = 1
+    let g:go_highlight_methods = 1
+    let g:go_highlight_structs = 1
+    let g:go_highlight_interfaces = 1
+    let g:go_highlight_operators = 1
+    let g:go_highlight_extra_types = 1
+    let g:go_highlight_build_constraints = 1
+    let g:go_highlight_chan_whitespace_error = 1
+endfunction
+call VimGoSetup()
 
 " ---------------------------------- "
 " Configure cpp c++
 " ---------------------------------- "
 autocmd FileType cpp nmap <leader>r :!g++ % && ./a.out<CR>
+
+
+
 
 " ---------------------------------- "
 " Configure YouCompleteMe and Snippets
@@ -225,25 +239,25 @@ set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/venv/*
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  \ 'file': '\v\.(exe|so|dll)$',
-  \ 'link': 'some_bad_symbolic_links',
-  \ }
+            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+            \ 'file': '\v\.(exe|so|dll)$',
+            \ 'link': 'some_bad_symbolic_links',
+            \ }
 
 
 " ---------------------------------- "
 " Configure codefmt
 " ---------------------------------- "
 augroup autoformat_settings
-  autocmd FileType bzl AutoFormatBuffer buildifier
-  autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
-  autocmd FileType dart AutoFormatBuffer dartfmt
-  autocmd FileType go AutoFormatBuffer gofmt
-  autocmd FileType gn AutoFormatBuffer gn
-  autocmd FileType html,css,json AutoFormatBuffer js-beautify
-  autocmd FileType java AutoFormatBuffer google-java-format
-  autocmd FileType python AutoFormatBuffer yapf
-  " Alternative: autocmd FileType python AutoFormatBuffer autopep8
+    autocmd FileType bzl AutoFormatBuffer buildifier
+    autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
+    autocmd FileType dart AutoFormatBuffer dartfmt
+    autocmd FileType go AutoFormatBuffer gofmt
+    autocmd FileType gn AutoFormatBuffer gn
+    autocmd FileType html,css,json AutoFormatBuffer js-beautify
+    autocmd FileType java AutoFormatBuffer google-java-format
+    autocmd FileType python AutoFormatBuffer yapf
+    " Alternative: autocmd FileType python AutoFormatBuffer autopep8
 augroup END
 
 " ---------------------------------- "
@@ -257,8 +271,8 @@ let g:ale_open_list = 1
 let g:ale_echo_cursor = 0
 
 aug QFClose
-  au!
-  au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix"|q|endif
+    au!
+    au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix"|q|endif
 aug END
 
 " Set this. Airline will handle the rest.
@@ -270,17 +284,16 @@ let g:ale_lint_on_text_changed = 'never'
 " if you don't want linters to run on opening a file
 let g:ale_lint_on_enter = 1
 " python checkers
-"let g:ale_python_flake8_executable = 'python'
-"let g:ale_python_flake8_options = '-m flake8'
-"let g:ale_python_pylint_executable = 'python'
-"let g:ale_python_pylint_options = '-m pylint'
+let g:ale_python_flake8_executable = 'python'
+let g:ale_python_flake8_options = '-m flake8'
+let g:ale_python_pylint_executable = 'python'
+let g:ale_python_pylint_options = '-m pylint'
 
 
 " ---------------------------------- "
 " Configure NERDTree
 " ---------------------------------- "
 " Window Width
-"let g:NERDTreeWinSize=40
 " Hide .pyc in NerdTree
 let NERDTreeIgnore=['\.pyc$', '\~$', '__pycache__', 'venv']
 
