@@ -43,14 +43,17 @@ Plugin 'honza/vim-snippets'
 Plugin 'google/vim-maktaba'
 Plugin 'google/vim-codefmt'
 Plugin 'google/vim-glaive'
+Plugin 'junegunn/goyo.vim'
 
 " Languages
 Plugin 'pangloss/vim-javascript'
 Plugin 'fatih/vim-go'
 Plugin 'buoto/gotests-vim'
 Plugin 'chrisbra/csv.vim'
+Plugin 'lervag/vimtex'
 
 " Colors
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'logico-dev/typewriter'
 Plugin 'jnurmine/Zenburn'
 
@@ -64,6 +67,9 @@ call glaive#Install()
 filetype plugin indent on    " required
 
 " Colors
+"let g:solarized_termcolors=256
+"set background=dark
+"colorscheme solarized
 colo zenburn
 "let g:airline_theme = 'typewriter'
 
@@ -75,13 +81,14 @@ colo zenburn
 
 " new leader
 let mapleader = ","
+let maplocalleader = ","
 
 " scroll offset
 set scrolloff=15
 
 augroup vimrc
-    autocmd!
-    autocmd BufWinEnter,Syntax * syn sync minlines=500 maxlines=500
+	autocmd!
+	autocmd BufWinEnter,Syntax * syn sync minlines=500 maxlines=500
 augroup END
 
 "---------------------------------
@@ -116,104 +123,107 @@ set shiftwidth=4
 " ---------------------------------- "
 " Configure python
 " ---------------------------------- "
-au BufNewFile,BufRead *.py
-            \ set tabstop=4 |
-            \ set softtabstop=4 |
-            \ set shiftwidth=4 |
-            \ set textwidth=79 |
-            \ set expandtab |
-            \ set autoindent |
-            \ set fileformat=unix |
-            \ set encoding=utf-8
-
-autocmd FileType python nnoremap <buffer> <F9> :exec '!python' shellescape(@%,1)<cr>
-let python_highlight_all=1
+function! VimPythonSetup()
+	autocmd BufNewFile,BufRead *.py setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+	autocmd BufNewFile,BufRead *.py setlocal autoindent fileformat=unix encoding=utf-8
+	au FileType python nmap <leader>r :!python %<CR>
+	let python_highlight_all=1
+endfunction
+call VimPythonSetup()
 
 
 " ---------------------------------- "
 " Configure javascript, js
 " ---------------------------------- "
 " js, javascript, html, css
-au BufNewFile,BufRead *.js,*.html,*.css
-            \ set tabstop=4 |
-            \ set softtabstop=4 |
-            \ set shiftwidth=4 |
-            \ set expandtab |
-            \ set autoindent
-
+au BufNewFile,BufRead *.js,*.html,*.css setlocal tabstop=4 softtabstop=4 shiftwidth=4 autoindent
 
 " ---------------------------------- "
 " Configure go, golang, GO
 " ---------------------------------- "
-" navigate between errors
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
 
-" Splits
-autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
-autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
-autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
-autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 
 function! VimGoSetup()
-    " vim-go related mappings
-    au FileType go nmap <Leader>r <Plug>(go-run)
-    au FileType go nmap <Leader>b <Plug>(go-build)
-    au FileType go nmap <Leader>t <Plug>(go-test)
-    au FileType go nmap <Leader>i <Plug>(go-info)
-    au FileType go nmap <Leader>s <Plug>(go-implements)
-    au FileType go nmap <Leader>c <Plug>(go-coverage)
-    au FileType go nmap <Leader>e <Plug>(go-rename)
-    au FileType go nmap <Leader>gi <Plug>(go-imports)
-    au FileType go nmap <Leader>gI <Plug>(go-install)
-    au FileType go nmap <Leader>gd <Plug>(go-doc)
-    au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
-    au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
-    au FileType go nmap <Leader>ds <Plug>(go-def-split)
-    au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
-    au FileType go nmap <Leader>dt <Plug>(go-def-tab)
-    let g:go_auto_type_info = 1
-    let g:go_fmt_command = "gofmt"
-    let g:go_fmt_experimental = 1
-    let g:go_dispatch_enabled = 0 " vim-dispatch needed
-    let g:go_list_type = "quickfix"
-    let g:go_metalinter_autosave = 1
-    let g:go_metalinter_autosave_enabled = ['vet', 'golint']
-    let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
-    let g:go_term_enabled = 0
-    let g:go_term_mode = "vertical"
-    let g:go_highlight_functions = 1
-    let g:go_highlight_methods = 1
-    let g:go_highlight_structs = 1
-    let g:go_highlight_interfaces = 1
-    let g:go_highlight_operators = 1
-    let g:go_highlight_extra_types = 1
-    let g:go_highlight_build_constraints = 1
-    let g:go_highlight_chan_whitespace_error = 1
+	" vim-go related mappings
+	" Splits
+	autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+	autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+	autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+	autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+	" go plugin functions
+	au FileType go nmap <Leader>r <Plug>(go-run)
+	au FileType go nmap <Leader>b <Plug>(go-build)
+	au FileType go nmap <Leader>t <Plug>(go-test)
+	au FileType go nmap <Leader>i <Plug>(go-info)
+	au FileType go nmap <Leader>s <Plug>(go-implements)
+	au FileType go nmap <Leader>c <Plug>(go-coverage)
+	au FileType go nmap <Leader>e <Plug>(go-rename)
+	au FileType go nmap <Leader>gi <Plug>(go-imports)
+	au FileType go nmap <Leader>gI <Plug>(go-install)
+	au FileType go nmap <Leader>gd <Plug>(go-doc)
+	au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+	au FileType go nmap <Leader>gb <Plug>(go-doc-browser)
+	au FileType go nmap <Leader>ds <Plug>(go-def-split)
+	au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
+	au FileType go nmap <Leader>dt <Plug>(go-def-tab)
+	let g:go_auto_type_info = 1
+	let g:go_fmt_command = "gofmt"
+	let g:go_fmt_experimental = 1
+	let g:go_dispatch_enabled = 0 " vim-dispatch needed
+	let g:go_list_type = "quickfix"
+	let g:go_metalinter_autosave = 1
+	let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+	let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck']
+	let g:go_term_enabled = 0
+	let g:go_term_mode = "vertical"
+	let g:go_highlight_functions = 1
+	let g:go_highlight_methods = 1
+	let g:go_highlight_structs = 1
+	let g:go_highlight_interfaces = 1
+	let g:go_highlight_operators = 1
+	let g:go_highlight_extra_types = 1
+	let g:go_highlight_build_constraints = 1
+	let g:go_highlight_chan_whitespace_error = 1
 endfunction
 call VimGoSetup()
 
 " ---------------------------------- "
 " Configure cpp c++
 " ---------------------------------- "
-autocmd FileType cpp nmap <leader>r :!g++ % && ./a.out<CR>
+function! CppSetup()
+	autocmd Filetype cpp setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+
+	autocmd FileType cpp nmap <leader>r :!g++ % && ./a.out<CR>
+
+endfunction
+call CppSetup()
 
 
+" ---------------------------------- "
+" Configure LaTex
+" ---------------------------------- "
+"  for pdf preview when vim is running in terminal
+if empty(v:servername) && exists('*remote_startserver')
+	call remote_startserver('VIM')
+endif
 
 
 " ---------------------------------- "
 " Configure YouCompleteMe and Snippets
 " ---------------------------------- "
 let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
-set completeopt-=preview
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:ycm_key_list_select_completion = ['<C-J>', '<Down>']
 let g:ycm_key_list_previous_completion = ['<C-K>', '<Up>']
 " Goto definition with F3
-map <F3> :YcmCompleter GoTo<CR>
+"map <F3> :YcmCompleter GoTo<CR>
 let g:ycm_autoclose_preview_window_after_completion=1
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+"map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+set completeopt-=preview
 
 
 " ---------------------------------- "
@@ -228,8 +238,8 @@ nmap s <Plug>(easymotion-overwin-f2)
 map <Leader><Leader>L <Plug>(easymotion-bd-jk)
 nmap <Leader><Leader>L <Plug>(easymotion-overwin-line)
 " Move to word
-map  <Leader><Leader>w <Plug>(easymotion-bd-w)
-nmap <Leader><Leader>w <Plug>(easymotion-overwin-w)
+"map  <Leader><Leader>w <Plug>(easymotion-bd-w)
+"nmap <Leader><Leader>w <Plug>(easymotion-overwin-w)
 
 " ---------------------------------- "
 " Configure CTRLP
@@ -239,25 +249,25 @@ set runtimepath^=~/.vim/bundle/ctrlp.vim
 let g:ctrlp_working_path_mode = 'ra'
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/venv/*
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-            \ 'file': '\v\.(exe|so|dll)$',
-            \ 'link': 'some_bad_symbolic_links',
-            \ }
+			\ 'dir':  '\v[\/]\.(git|hg|svn)$',
+			\ 'file': '\v\.(exe|so|dll)$',
+			\ 'link': 'some_bad_symbolic_links',
+			\ }
 
 
 " ---------------------------------- "
 " Configure codefmt
 " ---------------------------------- "
 augroup autoformat_settings
-    autocmd FileType bzl AutoFormatBuffer buildifier
-    autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
-    autocmd FileType dart AutoFormatBuffer dartfmt
-    autocmd FileType go AutoFormatBuffer gofmt
-    autocmd FileType gn AutoFormatBuffer gn
-    autocmd FileType html,css,json AutoFormatBuffer js-beautify
-    autocmd FileType java AutoFormatBuffer google-java-format
-    autocmd FileType python AutoFormatBuffer yapf
-    " Alternative: autocmd FileType python AutoFormatBuffer autopep8
+	"autocmd FileType bzl AutoFormatBuffer buildifier
+	autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
+	"autocmd FileType dart AutoFormatBuffer dartfmt
+	autocmd FileType go AutoFormatBuffer gofmt
+	"autocmd FileType gn AutoFormatBuffer gn
+	autocmd FileType html,css,json AutoFormatBuffer js-beautify
+	"autocmd FileType java AutoFormatBuffer google-java-format
+	autocmd FileType python AutoFormatBuffer yapf
+	" Alternative: autocmd FileType python AutoFormatBuffer autopep8
 augroup END
 
 " ---------------------------------- "
@@ -271,8 +281,8 @@ let g:ale_open_list = 1
 let g:ale_echo_cursor = 0
 
 aug QFClose
-    au!
-    au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix"|q|endif
+	au!
+	au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&buftype") == "quickfix"|q|endif
 aug END
 
 " Set this. Airline will handle the rest.
@@ -303,11 +313,5 @@ nmap <F6> :NERDTreeToggle<CR>
 " Toggle TagBar (ctags)
 nmap <F8> :TagbarToggle<CR>
 
-" Lines numbers
-"set nu
-
-"autocmd VimEnter * NERDTree
-"autocmd VimEnter * wincmd p
-"
 " Remove trailing whitespaces
-"autocmd BufWritePre * %s/\s\+$//e
+autocmd BufWritePre * %s/\s\+$//e
