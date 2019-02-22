@@ -47,6 +47,7 @@ Plugin 'junegunn/goyo.vim'
 
 " Languages
 Plugin 'pangloss/vim-javascript'
+Plugin 'ternjs/tern_for_vim'
 Plugin 'fatih/vim-go'
 Plugin 'buoto/gotests-vim'
 Plugin 'chrisbra/csv.vim'
@@ -136,7 +137,9 @@ call VimPythonSetup()
 " Configure javascript, js
 " ---------------------------------- "
 " js, javascript, html, css
-au BufNewFile,BufRead *.js,*.html,*.css setlocal tabstop=4 softtabstop=4 shiftwidth=4 autoindent
+au BufNewFile,BufRead *.js,*.html,*.css setlocal tabstop=2 softtabstop=2 shiftwidth=2 autoindent
+au FileType javascript nmap <leader>r :!node %<CR>
+
 
 " ---------------------------------- "
 " Configure go, golang, GO
