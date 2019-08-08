@@ -46,16 +46,13 @@ Plugin 'google/vim-glaive'
 Plugin 'junegunn/goyo.vim'
 
 " Languages
-Plugin 'pangloss/vim-javascript'
 Plugin 'ternjs/tern_for_vim'
 Plugin 'fatih/vim-go'
 Plugin 'buoto/gotests-vim'
-Plugin 'chrisbra/csv.vim'
-Plugin 'lervag/vimtex'
+Plugin 'previm/previm'
 
 " Colors
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'logico-dev/typewriter'
+Plugin 'andreypopp/vim-colors-plain'
 Plugin 'jnurmine/Zenburn'
 
 " ...
@@ -68,17 +65,9 @@ call glaive#Install()
 filetype plugin indent on    " required
 
 " Colors
-"let g:solarized_termcolors=256
-"set background=dark
-"colorscheme solarized
-colo zenburn
-"let g:airline_theme = 'typewriter'
-
-"augroup CursorLine
-"au!
-"au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-"au WinLeave * setlocal nocursorline
-"augroup END
+"colo zenburn
+set background=dark
+colo plain
 
 " new leader
 let mapleader = ","
@@ -86,11 +75,6 @@ let maplocalleader = ","
 
 " scroll offset
 set scrolloff=15
-
-augroup vimrc
-	autocmd!
-	autocmd BufWinEnter,Syntax * syn sync minlines=500 maxlines=500
-augroup END
 
 "---------------------------------
 "------Navigation and panes------
@@ -110,11 +94,6 @@ nnoremap <Leader>s :%s/\<<C-r><C-w>\>/
 map <C-n> :cnext<CR>
 map <C-m> :cprevious<CR>
 nnoremap <leader>a :cclose<CR>
-"autocmd FileType qf wincmd J
-
-" Enable folding
-"set foldmethod=indent
-"set foldlevel=99
 
 " common indent
 set tabstop=4
@@ -140,15 +119,17 @@ call VimPythonSetup()
 au BufNewFile,BufRead *.js,*.html,*.css setlocal tabstop=2 softtabstop=2 shiftwidth=2 autoindent
 au FileType javascript nmap <leader>r :!node %<CR>
 
+" ---------------------------------- "
+" Configure yaml
+" ---------------------------------- "
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 " ---------------------------------- "
 " Configure go, golang, GO
 " ---------------------------------- "
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4
-
-
 function! VimGoSetup()
 	" vim-go related mappings
+	autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
 	" Splits
 	autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
 	autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
@@ -158,9 +139,11 @@ function! VimGoSetup()
 	au FileType go nmap <Leader>r <Plug>(go-run)
 	au FileType go nmap <Leader>b <Plug>(go-build)
 	au FileType go nmap <Leader>t <Plug>(go-test)
+	au FileType go nmap <Leader>tf <Plug>(go-test-func)
 	au FileType go nmap <Leader>i <Plug>(go-info)
 	au FileType go nmap <Leader>s <Plug>(go-implements)
 	au FileType go nmap <Leader>c <Plug>(go-coverage)
+	au FileType go nmap <Leader>cl <Plug>(go-coverage-clear)
 	au FileType go nmap <Leader>e <Plug>(go-rename)
 	au FileType go nmap <Leader>gi <Plug>(go-imports)
 	au FileType go nmap <Leader>gI <Plug>(go-install)
@@ -195,22 +178,16 @@ call VimGoSetup()
 " Configure cpp c++
 " ---------------------------------- "
 function! CppSetup()
+	let &path.="src/include,/usr/include/AL,"
 	autocmd Filetype cpp setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
-
 	autocmd FileType cpp nmap <leader>r :!g++ % && ./a.out<CR>
-
 endfunction
 call CppSetup()
 
-
 " ---------------------------------- "
-" Configure LaTex
+" Configure Markdown, md, markdown
 " ---------------------------------- "
-"  for pdf preview when vim is running in terminal
-if empty(v:servername) && exists('*remote_startserver')
-	call remote_startserver('VIM')
-endif
-
+let g:previm_open_cmd = 'google-chrome'
 
 " ---------------------------------- "
 " Configure YouCompleteMe and Snippets
@@ -263,13 +240,13 @@ let g:ctrlp_custom_ignore = {
 " ---------------------------------- "
 augroup autoformat_settings
 	"autocmd FileType bzl AutoFormatBuffer buildifier
-	autocmd FileType c,cpp,proto,javascript AutoFormatBuffer clang-format
+	autocmd FileType c,cpp,proto AutoFormatBuffer clang-format
 	"autocmd FileType dart AutoFormatBuffer dartfmt
 	autocmd FileType go AutoFormatBuffer gofmt
 	"autocmd FileType gn AutoFormatBuffer gn
-	autocmd FileType html,css,json AutoFormatBuffer js-beautify
+	"autocmd FileType html,css,json AutoFormatBuffer js-beautify
 	"autocmd FileType java AutoFormatBuffer google-java-format
-	autocmd FileType python AutoFormatBuffer yapf
+	"autocmd FileType python AutoFormatBuffer yapf
 	" Alternative: autocmd FileType python AutoFormatBuffer autopep8
 augroup END
 
@@ -280,8 +257,14 @@ let g:ale_completion_enabled = 0
 let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
 let g:ale_open_list = 1
-"let g:ale_fix_on_save = 0
+let g:ale_fix_on_save = 1
+let g:ale_lint_on_insert_leave = 0
 let g:ale_echo_cursor = 0
+
+augroup DragQuickfixWindowDown
+    autocmd!
+    autocmd FileType qf wincmd J
+augroup end
 
 aug QFClose
 	au!

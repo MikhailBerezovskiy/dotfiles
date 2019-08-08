@@ -12,10 +12,12 @@ DST = HOME_DIR
 logger = logging.getLogger('dotfiles')
 logger.setLevel(logging.DEBUG)
 
+
 def main():
     try:
-        os.symlink(SRC+'/.bashrc', DST+'/.bashrc')
-        os.symlink(SRC+'/.vimrc', DST + '/.vimrc')
+        os.symlink(SRC + '/.bashrc', DST + '/.bashrc')
+        os.symlink(SRC + '/.vimrc', DST + '/.vimrc')
+        os.symlink(SRC + '/.Xresources', DST + '/.Xresources')
     except OSError as err:
         logger.warn(err)
         pass
