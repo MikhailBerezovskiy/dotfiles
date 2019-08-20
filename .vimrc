@@ -60,12 +60,12 @@ set wildignore+=/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 set ignorecase
 set smartcase
 set hlsearch
+nnoremap <leader><space> :noh<cr>
 set incsearch
 set lazyredraw
 set magic
 set showmatch
 set mat=2
-set foldcolumn=1
 "mac settings
 set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
@@ -104,6 +104,7 @@ set expandtab
 set smarttab
 set shiftwidth=4
 set tabstop=4
+set foldcolumn=2
 set lbr
 set tw=500
 set autoindent
@@ -164,8 +165,6 @@ autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 " GO golang
 "--------------------------------------------------
 function! VimGoSetup()
-	let g:go_def_mode='gopls'
-	let g:go_info_mode='gopls'
 	autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
 	au FileType go nmap <Leader>r <Plug>(go-run)
 	au FileType go nmap <Leader>b <Plug>(go-build)
@@ -202,6 +201,8 @@ function! VimGoSetup()
 	let g:go_highlight_extra_types = 1
 	let g:go_highlight_build_constraints = 1
 	let g:go_highlight_chan_whitespace_error = 1
+	let g:go_def_mode='gopls'
+	let g:go_info_mode='gopls'
 endfunction
 call VimGoSetup()
 
@@ -210,7 +211,7 @@ call VimGoSetup()
 "--------------------------------------------------
 function! CppSetup()
 	let &path.="src/include,/usr/include/,"
-	autocmd Filetype cpp setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+    set tags=./tags;/
 	autocmd FileType cpp nmap <leader>r :!g++ % && ./a.out<CR>
 endfunction
 call CppSetup()
